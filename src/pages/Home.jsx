@@ -1,10 +1,11 @@
 import React from "react";
 import UserResults from "../components/users/UserResults";
+import UserSearch from "../components/users/UserSearch";
 
 const Home = () => {
   return (
     <>
-      {/* {import.meta.env.VITE_APP_GITHUB_TOKEN} */}
+      <UserSearch />
       <UserResults />
     </>
   );
