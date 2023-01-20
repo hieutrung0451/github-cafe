@@ -7,3 +7,8 @@
   margin: 0;
   padding: 0;
 }
+
+.custom-card-body {
+  position: relative;
+  bottom: 120px;
+}
