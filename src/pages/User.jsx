@@ -5,7 +5,7 @@ import { RiGitRepositoryLine } from "react-icons/ri";
 import Spinner from "../components/layout/Spinner";
 import RepoList from "../components/repos/RepoList";
 import GithubContext from "../context/github/GithubContext";
-import { getUser, getRepos } from "../context/github/GithubAction";
+import { getUserAndRepos } from "../context/github/GithubAction";
 
 const User = () => {
   const { user, loading, repos, dispatch } = useContext(GithubContext);
@@ -15,11 +15,8 @@ const User = () => {
   useEffect(() => {
     dispatch({ type: "SET_LOADING" });
     const getUserData = async () => {
-      const userData = await getUser(params.login);
-      dispatch({ type: "GET_USER", payload: userData });
-
-      const repoData = await getRepos(params.login);
-      dispatch({ type: "GET_REPOS", payload: repoData });
+      const userData = await getUserAndRepos(params.login);
+      dispatch({ type: "GET_USER_AND_REPOS", payload: userData });
     };
 
     getUserData();

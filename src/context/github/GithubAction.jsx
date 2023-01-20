@@ -1,5 +1,10 @@
+import axios from "axios";
 const GITHUB_URL = import.meta.env.VITE_APP_GITHUB_URL;
 const GITHUB_TOKEN = import.meta.env.VITE_APP_GITHUB_TOKEN;
+
+const github = axios.create({
+  baseURL: GITHUB_URL,
+});
 
 // Get search result
 export const searchUsers = async (text) => {
@@ -7,44 +12,17 @@ export const searchUsers = async (text) => {
     q: text,
   });
 
-  const response = await fetch(
-    `${GITHUB_URL}/search/users?${params}`
-    // {
-    //   headers: {
-    //     Authorization: `token ${GITHUB_TOKEN}`,
-    //   },
-    // }
-  );
+  const response = await github.get(`/search/users?${params}`);
 
-  const { items } = await response.json();
-
-  return items;
+  return response.data.items;
 };
 
-// Get singe user
-export const getUser = async (login) => {
-  const response = await fetch(
-    `${GITHUB_URL}/users/${login}`
-    // {
-    //   headers: {
-    //     Authorization: `token ${GITHUB_TOKEN}`,
-    //   },
-    // }
-  );
+// Get user and repos
+export const getUserAndRepos = async (login) => {
+  const [user, repos] = await Promise.all([
+    github.get(`/users/${login}`),
+    github.get(`/users/${login}/repos`),
+  ]);
 
-  if (response === 404) {
-    window.location = "/notfound";
-  } else {
-    const data = await response.json();
-
-    return data;
-  }
-};
-
-// get All repos
-export const getRepos = async (login) => {
-  const response = await fetch(`${GITHUB_URL}/users/${login}/repos`);
-  const data = await response.json();
-
-  return data;
+  return { user: user.data, repos: repos.data };
 };
